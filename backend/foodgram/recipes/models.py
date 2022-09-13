@@ -1,6 +1,4 @@
-from tabnanny import verbose
 from django.db import models
-from django.forms import CharField, SlugField
 
 
 class User():
@@ -22,13 +20,21 @@ class Tag(models.Model):
 
 
 class Ingredient(models.Model):
-    name = CharField(
+    name = models.CharField(
         verbose_name='Название ингридиента',
         max_length=50
     )
-    measurement_unit = CharField(
+    measurement_unit = models.CharField(
         verbose_name='Единица измерения',
         max_length=50
+    )
+
+
+class IngredientRecipe(models.Model):
+    ingredient = models.ForeignKey(
+        Ingredient,
+        related_name='ingredient',
+        on_delete=models.CASCADE
     )
 
 
@@ -37,9 +43,11 @@ class Recipe(models.Model):
         Tag,
         related_name='recipes'
     )
-    ingredients = models.ManyToManyField(
-        Ingredient,
-        related_name='recipes'
+    author = models.ForeignKey(
+        User,
+        related_name='recipes',
+        verbose_name='Автор рецепта',
+        on_delete=models.CASCADE
     )
     name = models.CharField(
         verbose_name='Название рецепта',

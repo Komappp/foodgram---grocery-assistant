@@ -1,8 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import UniqueConstraint
 
-
-class User():
-    pass
+User = get_user_model()
 
 
 class Tag(models.Model):
@@ -30,13 +30,6 @@ class Ingredient(models.Model):
     )
 
 
-class IngredientRecipe(models.Model):
-    ingredient = models.ForeignKey(
-        Ingredient,
-        related_name='ingredient',
-        on_delete=models.CASCADE
-    )
-
 
 class Recipe(models.Model):
     tags = models.ManyToManyField(
@@ -54,5 +47,60 @@ class Recipe(models.Model):
         max_length=100
     )
     image = models.ImageField(
-
+        upload_to='pics/',
+        verbose_name='Картинка'
     )
+    text = models.TextField(
+        verbose_name='Описание рецепта'
+    )
+    cooking_time = models.PositiveIntegerField()
+    pub_date = models.DateTimeField(auto_now_add=True)
+
+
+class IngredientRecipe(models.Model):
+    ingredient = models.ForeignKey(
+        Ingredient,
+        related_name='ingredient',
+        on_delete=models.CASCADE
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        related_name='recipe',
+        on_delete=models.CASCADE
+    )
+    amount = models.PositiveIntegerField()
+
+    class Meta:
+        UniqueConstraint(fields=['ingredient', 'recipe'], name='unique_ingredient')
+
+    
+class FavoritedRecipe(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='favorited'
+    )
+
+    class Meta:
+        UniqueConstraint(fields=['user', 'recipe'], name='unique_favorited')
+
+
+class ShoppingCart(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user_cart'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='recipe_cart'
+    )
+
+    class Meta:
+        UniqueConstraint(fields=['user', 'recipe'], name='unique_favorited')

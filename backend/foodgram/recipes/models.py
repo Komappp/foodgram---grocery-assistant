@@ -30,7 +30,6 @@ class Ingredient(models.Model):
     )
 
 
-
 class Recipe(models.Model):
     tags = models.ManyToManyField(
         Tag,

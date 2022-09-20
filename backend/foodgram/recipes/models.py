@@ -29,6 +29,9 @@ class Ingredient(models.Model):
         max_length=50
     )
 
+    def __str__(self):
+        return f'{self.name}, {self.measurement_unit}'
+
 
 class Recipe(models.Model):
     tags = models.ManyToManyField(
@@ -43,8 +46,9 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient,
-        through='IngredientRecipe',
-        verbose_name='Ингредиенты'
+        related_name='recipes',
+        verbose_name='Ингредиенты',
+        through='IngredientRecipe'
     )
     name = models.CharField(
         verbose_name='Название рецепта',
@@ -62,16 +66,19 @@ class Recipe(models.Model):
     )
     pub_date = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.name
+
 
 class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
-        related_name='ingredient',
+        related_name='recipe_ingredient',
         on_delete=models.CASCADE
     )
     recipe = models.ForeignKey(
         Recipe,
-        related_name='recipe',
+        related_name='recipe_ingredient',
         on_delete=models.CASCADE
     )
     amount = models.PositiveIntegerField()
@@ -81,7 +88,13 @@ class IngredientRecipe(models.Model):
             fields=['ingredient', 'recipe'], name='unique_ingredient'
         )
 
-    
+    def __str__(self):
+        return (
+            f'{self.amount} {self.ingredient.measurement_unit} '
+            f'{self.ingredient} в рецепте {self.recipe}'
+        )
+
+
 class FavoritedRecipe(models.Model):
     user = models.ForeignKey(
         User,

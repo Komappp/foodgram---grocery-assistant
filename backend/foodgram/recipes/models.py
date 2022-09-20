@@ -41,6 +41,11 @@ class Recipe(models.Model):
         verbose_name='Автор рецепта',
         on_delete=models.CASCADE
     )
+    ingredients = models.ManyToManyField(
+        Ingredient,
+        through='IngredientRecipe',
+        verbose_name='Ингредиенты'
+    )
     name = models.CharField(
         verbose_name='Название рецепта',
         max_length=100
@@ -52,7 +57,9 @@ class Recipe(models.Model):
     text = models.TextField(
         verbose_name='Описание рецепта'
     )
-    cooking_time = models.PositiveIntegerField()
+    cooking_time = models.PositiveIntegerField(
+        verbose_name='Время приготовления'
+    )
     pub_date = models.DateTimeField(auto_now_add=True)
 
 
@@ -70,7 +77,9 @@ class IngredientRecipe(models.Model):
     amount = models.PositiveIntegerField()
 
     class Meta:
-        UniqueConstraint(fields=['ingredient', 'recipe'], name='unique_ingredient')
+        UniqueConstraint(
+            fields=['ingredient', 'recipe'], name='unique_ingredient'
+        )
 
     
 class FavoritedRecipe(models.Model):

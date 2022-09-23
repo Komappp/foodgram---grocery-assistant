@@ -1,11 +1,18 @@
-from django.http import JsonResponse
-from recipes.models import Recipe
-from .serializers import RecipeSerializer
-from django.shortcuts import get_object_or_404
+from rest_framework import viewsets
+from recipes.models import Recipe, Tag, Ingredient
+from .serializers import IngredientSerializer, RecipeSerializer, TagSerializer
 
 
-def get_recipe(request, pk):
-    if request.method == 'GET':
-        post = get_object_or_404(Recipe, id=pk)
-        serializer = RecipeSerializer(post, many=False)
-        return JsonResponse(serializer.data)
+class RecipeViewSet(viewsets.ModelViewSet):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+
+
+class IngredientViewSet(viewsets.ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer

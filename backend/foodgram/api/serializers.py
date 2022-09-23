@@ -14,18 +14,29 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
 
 
-class IngredientSerializer(serializers.ModelSerializer):
-    amount = StringRelatedField(read_only=True)
+# class IngredientSerializer(serializers.ModelSerializer):
+#     amount = serializers.SerializerMethodField()
+
+#     class Meta:
+#         fields = ('id', 'name', 'measurement_unit', 'amount')
+
+
+class IngredientRecipeSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source='ingredient.id')
+    name = serializers.ReadOnlyField(source='ingredient.name')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit'
+    )
 
     class Meta:
         fields = ('id', 'name', 'measurement_unit', 'amount')
-        model = Ingredient
+        model = IngredientRecipe
 
 
 class RecipeSerializer(serializers.ModelSerializer):
     author = SlugRelatedField(slug_field='username', read_only=True)
     tags = TagSerializer(many=True, required=False)
-    ingredients = IngredientSerializer(many=True, required=False)
+    ingredients = IngredientRecipeSerializer(source='recipe_ingredient', many=True, required=False)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
 

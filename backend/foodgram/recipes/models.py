@@ -1,8 +1,6 @@
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.db import models
 from django.db.models import UniqueConstraint
-
-User = get_user_model()
 
 
 class Tag(models.Model):
@@ -17,6 +15,9 @@ class Tag(models.Model):
     slug = models.SlugField(
         unique=True
     )
+
+    def __str__(self):
+        return self.name
 
 
 class Ingredient(models.Model):

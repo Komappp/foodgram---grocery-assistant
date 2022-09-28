@@ -16,12 +16,13 @@ class Base64ImageField(serializers.ImageField):
         if isinstance(data, str) and data.startswith('data:image'):
             format, imgstr = data.split(';base64,')
             ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+            data = ContentFile(base64.b64decode(imgstr), name='pic.' + ext)
 
         return super().to_internal_value(data)
 
 
 class TagSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Tag
         fields = '__all__'
@@ -55,14 +56,23 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
 
+class IngredientRecipeWriteSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source='ingredient.id')
+    name = serializers.ReadOnlyField(source='ingredient.name')
+    amount = serializers.IntegerField()
+    class Meta:
+        model = IngredientRecipe
+        fields = '__all__'
+
+
 class RecipeSerializer(serializers.ModelSerializer):
-    author = UserSerializer()
-    tags = TagSerializer(many=True, required=True)
+    author = UserSerializer(read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
     ingredients = IngredientRecipeSerializer(source='recipe_ingredient',
                                              many=True, required=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
-    image = Base64ImageField(required=False, allow_null=True)
+    image = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = Recipe
@@ -84,19 +94,58 @@ class RecipeSerializer(serializers.ModelSerializer):
         return ShoppingCart.objects.filter(recipe=obj,
                                            user=request.user).exists()
 
+
+class RecipeWriteSerializer(serializers.ModelSerializer):
+    image = Base64ImageField(required=False, allow_null=True)
+    author = UserSerializer(read_only=True)
+    #ingredients = IngredientRecipeWriteSerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
+
+    def create_ingredients(self, ingredients_data, recipe):
+        model_instances = [IngredientRecipe(
+            ingredient_id=ingredient['id'],
+            recipe=recipe,
+            amount=ingredient['amount']
+            ) for ingredient in ingredients_data]
+        IngredientRecipe.objects.bulk_create(model_instances)
+
     def create(self, validated_data):
         image = validated_data.pop('image')
-        print(validated_data.get('tags'))
         ingredients_data = validated_data.pop('ingredients')
-        recipe = Recipe.objects.create(image=image, **validated_data)
+        recipe = Recipe.objects.create(
+            image=image, **validated_data,
+            author=self.context.get('request').user
+        )
         tags_data = self.initial_data.get('tags')
         recipe.tags.set(tags_data)
         self.create_ingredients(ingredients_data, recipe)
         return recipe
+    
+    def validate(self, data):
+        ingredients = self.initial_data.get('ingredients')
+        for ingredient in ingredients:
+            if int(ingredient['amount']) <= 0:
+                raise serializers.ValidationError({
+                    'ingredients': ('Число игредиентов должно быть больше 0')
+                })
+        data['ingredients'] = ingredients
+        return data
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'tags', 'author', 'ingredients', 'image',
+                  'name', 'text', 'cooking_time')
 
 
 class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
+        fields = '__all__'
+
+
+class ShoppingCartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ShoppingCart
         fields = '__all__'

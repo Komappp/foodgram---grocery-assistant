@@ -1,5 +1,5 @@
 import os
-from datetime import timedelta
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -24,7 +24,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'api',
     'users',
-    'djoser'
+    'djoser',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -111,7 +112,7 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny', 
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -127,3 +128,10 @@ CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
+
+DJOSER = {
+    "SERIALIZERS": {
+        'user': 'api.serializers.UserSerializer',
+        'current_user': 'api.serializers.UserSerializer',
+    }
+}

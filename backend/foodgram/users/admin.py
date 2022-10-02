@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import User, Following
 from django.contrib.auth.admin import UserAdmin
 from recipes.admin import Admin
+
+from .models import Following, User
 
 
 # регистрируем кастомную модель юзера и прописываем разрешения для stuff

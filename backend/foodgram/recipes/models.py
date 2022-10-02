@@ -1,6 +1,6 @@
-from users.models import User
 from django.db import models
 from django.db.models import UniqueConstraint
+from users.models import User
 
 
 class Tag(models.Model):
@@ -66,6 +66,9 @@ class Recipe(models.Model):
         verbose_name='Время приготовления'
     )
     pub_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-pub_date']
 
     def __str__(self):
         return self.name

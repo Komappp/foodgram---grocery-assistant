@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import UniqueConstraint
+from django.http import HttpResponse
 from users.models import User
 
 
@@ -23,7 +24,8 @@ class Tag(models.Model):
 class Ingredient(models.Model):
     name = models.CharField(
         verbose_name='Название ингридиента',
-        max_length=50
+        max_length=50,
+        db_index=True
     )
     measurement_unit = models.CharField(
         verbose_name='Единица измерения',
@@ -53,7 +55,8 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         verbose_name='Название рецепта',
-        max_length=100
+        max_length=100,
+        db_index=True
     )
     image = models.ImageField(
         upload_to='pics/',
@@ -65,10 +68,31 @@ class Recipe(models.Model):
     cooking_time = models.PositiveIntegerField(
         verbose_name='Время приготовления'
     )
-    pub_date = models.DateTimeField(auto_now_add=True)
+    pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
         ordering = ['-pub_date']
+
+    def get_shopping_list(queryset):
+        """Передает ингредиенты txt файлом в HTTP-response"""
+
+        STRING_LEN = 70
+        shopping_list = ''
+        ingredients = {}
+        for i in queryset:
+            key, value = i[0] + ',' + i[1], i[2]
+            if key in ingredients:
+                ingredients[key] += value
+                continue
+            ingredients[key] = value
+        for key, value in ingredients.items():
+            ingr, unit = key.split(',')
+            space_count = (STRING_LEN-len(ingr+unit+str(i[2])))*' '
+            shopping_list += f'{ingr} {space_count} {value} {unit}\n'
+        print(shopping_list)
+        response = HttpResponse(shopping_list, content_type='text/plane')
+        response['Content-Disposition'] = f'attachment; filename=shopping_list.txt'
+        return response
 
     def __str__(self):
         return self.name

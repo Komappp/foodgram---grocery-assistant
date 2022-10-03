@@ -4,17 +4,17 @@ from recipes.models import (FavoritedRecipe, Ingredient, IngredientRecipe,
                             Recipe, ShoppingCart, Tag)
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .filters import RecipeFilters
 from .pagination import RecipesPagination
-from .permissions import IsOwnerOrStuffOrReadOnly, StuffOnly
+from .permissions import IsOwnerOrStuffOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerializer,
                           RecipeSerializer, RecipeShortSerializer,
                           RecipeWriteSerializer, ShoppingCartSerializer,
                           TagSerializer)
-from .utils import get_shopping_list
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -30,13 +30,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeWriteSerializer
         return RecipeSerializer
 
-    @action(detail=False, url_path='download_shopping_cart')
+    @action(detail=False, url_path='download_shopping_cart',
+            permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
         queryset = IngredientRecipe.objects.filter(
             recipe__recipe_cart__user=request.user).values_list(
             'ingredient__name', 'ingredient__measurement_unit',
             'amount')
-        response = get_shopping_list(queryset)
+        response = Recipe.get_shopping_list(queryset)
         return response
 
     def create(self, request, *args, **kwargs):
@@ -67,6 +68,13 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ShoppingCartFavoriteRecipeAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self, request, data):
+        if self.is_shopping(request):
+            return ShoppingCartSerializer(data=data)
+        else:
+            return FavoriteSerializer(data=data)
 
     def is_shopping(self, request):
         return 'shopping' in request.path
@@ -77,12 +85,8 @@ class ShoppingCartFavoriteRecipeAPIView(APIView):
             'recipe': recipe_id,
             'user': user.id
         }
-        if self.is_shopping(request):
-            serializer = ShoppingCartSerializer(data=data)
-        else:
-            serializer = FavoriteSerializer(data=data)
-
-        if serializer.is_valid():
+        serializer = self.get_serializer_class(request, data)
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             serializer_to_response = RecipeShortSerializer(
                 Recipe.objects.get(id=recipe_id)

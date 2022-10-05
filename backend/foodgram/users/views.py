@@ -4,12 +4,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Following
+from .pagination import FollowPagination
 from .serializers import FollowingSerializer, FollowingWriteSerializer
 
 
 class FollowingViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Following.objects.all()
     serializer_class = FollowingSerializer
+    pagination_class = FollowPagination
 
 
 class FollowingAPIView(APIView):

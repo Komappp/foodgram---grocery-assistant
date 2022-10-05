@@ -1,10 +1,18 @@
 from django_filters import rest_framework as filters
-from recipes.models import Recipe
+from recipes.models import Recipe, Tag
+from rest_framework.filters import SearchFilter
+
+
+class IngredientSearchFilter(SearchFilter):
+    search_param = 'name'
 
 
 class RecipeFilters(filters.FilterSet):
-    tags = filters.CharFilter(field_name='tags__slug',
-                              lookup_expr='iexact')
+    tags = filters.ModelMultipleChoiceFilter(
+        field_name='tags__slug',
+        queryset=Tag.objects.all(),
+        to_field_name='slug'
+    )
 
     is_favorited = filters.BooleanFilter(
         method='get_is_favorited'

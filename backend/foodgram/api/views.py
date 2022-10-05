@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .filters import RecipeFilters
+from .filters import IngredientSearchFilter, RecipeFilters
 from .pagination import RecipesPagination
 from .permissions import IsOwnerOrStuffOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerializer,
@@ -62,8 +62,8 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    filter_backends = (filters.SearchFilter, )
-    search_fields = ('name',)
+    filter_backends = (IngredientSearchFilter, )
+    search_fields = ('name', )
     permission_classes = [IsOwnerOrStuffOrReadOnly, ]
 
 

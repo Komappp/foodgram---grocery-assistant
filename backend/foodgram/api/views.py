@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from recipes.models import (FavoritedRecipe, Ingredient, IngredientRecipe,
                             Recipe, ShoppingCart, Tag)
-from rest_framework import filters, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response

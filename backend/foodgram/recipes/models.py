@@ -87,11 +87,12 @@ class Recipe(models.Model):
             ingredients[key] = value
         for key, value in ingredients.items():
             ingr, unit = key.split(',')
-            space_count = (STRING_LEN-len(ingr+unit+str(i[2])))*' '
+            space_count = (STRING_LEN - len(ingr + unit + str(i[2]))) * ' '
             shopping_list += f'{ingr} {space_count} {value} {unit}\n'
         print(shopping_list)
         response = HttpResponse(shopping_list, content_type='text/plane')
-        response['Content-Disposition'] = f'attachment; filename=shopping_list.txt'
+        string = 'attachment;filename=shopping_list.txt'
+        response['Content-Disposition'] = string
         return response
 
     def __str__(self):

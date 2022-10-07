@@ -2,7 +2,6 @@ import base64
 
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
-from platformdirs import user_config_dir
 from recipes.models import (FavoritedRecipe, Ingredient, IngredientRecipe,
                             Recipe, ShoppingCart, Tag)
 from rest_framework import serializers
@@ -101,7 +100,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             ingredient_id=ingredient['id'],
             recipe=recipe,
             amount=ingredient['amount']
-            ) for ingredient in ingredients_data]
+        ) for ingredient in ingredients_data]
         IngredientRecipe.objects.bulk_create(model_instances)
 
     def create(self, validated_data):
@@ -175,7 +174,7 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
             )
         return data
 
-    
+
 class FavoriteSerializer(serializers.ModelSerializer):
 
     class Meta:

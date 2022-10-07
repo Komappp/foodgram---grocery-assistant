@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import (FavoritedRecipe, Recipe, Ingredient,
-                     IngredientRecipe, Tag, ShoppingCart)
+from .models import (FavoritedRecipe, Ingredient, IngredientRecipe, Recipe,
+                     ShoppingCart, Tag)
 
 
 class Admin(admin.ModelAdmin):
@@ -23,8 +23,7 @@ class RecipeAdmin(Admin):
     list_filter = ('name', 'author', 'tags')
 
     def added_to_favorited(self, object):
-        result = object.favorited.count()
-        return result
+        return object.favorited.count()
 
 
 class IngredientsAdmin(Admin):

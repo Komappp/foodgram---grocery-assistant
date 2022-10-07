@@ -73,6 +73,7 @@ class Recipe(models.Model):
     class Meta:
         ordering = ['-pub_date']
 
+    @staticmethod
     def get_shopping_list(queryset):
         """Передает ингредиенты txt файлом в HTTP-response"""
 

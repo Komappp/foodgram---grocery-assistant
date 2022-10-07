@@ -37,8 +37,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             recipe__recipe_cart__user=request.user).values_list(
             'ingredient__name', 'ingredient__measurement_unit',
             'amount')
-        response = Recipe.get_shopping_list(queryset)
-        return response
+        return Recipe.get_shopping_list(queryset)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

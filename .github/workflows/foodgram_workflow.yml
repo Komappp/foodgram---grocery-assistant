@@ -44,8 +44,8 @@ jobs:
         with:
           push: true
           tags: komappp/foodgram:latest
-          context: ./backend/foodgram
-          file: ./backend/foodgram/Dockerfile
+          context: ./backend
+          file: ./backend/Dockerfile
 
 
   deploy:

@@ -60,7 +60,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             sudo docker-compose stop
-            sudo docker-compose rm web
+            sudo docker-compose rm frontend
+            sudo docker-compose rm backend
             cd infra
             rm .env
             touch .env

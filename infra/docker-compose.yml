@@ -9,7 +9,7 @@ services:
       - .env
 
   frontend:
-    image: komappp/foodgram_backend:latest
+    image: komappp/foodgram:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:

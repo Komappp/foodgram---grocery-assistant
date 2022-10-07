@@ -4,7 +4,7 @@ from recipes.models import Ingredient
 
 
 class Command(BaseCommand):
-    help = "Loads data from children.csv"
+    help = "Loads data from ingredients.csv"
 
     def handle(self, *args, **options):
 

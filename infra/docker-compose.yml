@@ -21,7 +21,7 @@ services:
       - ./.env
       
   frontend:
-    image: komappp/foodgram_frontend:latest
+    image: niknovikdoc/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:

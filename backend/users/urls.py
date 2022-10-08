@@ -6,6 +6,7 @@ router = DefaultRouter()
 router.register('subscriptions', FollowingViewSet, basename='follows')
 
 urlpatterns = [
+    path('', include('djoser.urls')),
     path('', include(router.urls)),
     path('<int:follow_id>/subscribe/',
          FollowingAPIView.as_view()),

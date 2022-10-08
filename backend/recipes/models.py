@@ -91,7 +91,7 @@ class Recipe(models.Model):
             space_count = (string_len - len(ingr + unit + str(i[2]))) * ' '
             shopping_list += f'{ingr} {space_count} {value} {unit}\n'
         print(shopping_list)
-        response = HttpResponse(shopping_list, content_type='text/plane')
+        response = HttpResponse(shopping_list, content_type='text/txt')
         string = 'attachment;filename=shopping_list.txt'
         response['Content-Disposition'] = string
         return response

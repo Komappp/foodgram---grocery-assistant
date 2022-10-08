@@ -18,7 +18,7 @@ class FollowingListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return User.objects.filter(followers__follower=user)
+        return Following.objects.filter(follower=user)
 
 
 class FollowingCreateAPIView(APIView):

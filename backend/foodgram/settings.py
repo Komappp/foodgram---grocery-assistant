@@ -11,7 +11,7 @@ SECRET_KEY = '$m=jgx82k6-=!!bye&3&dsn)q6l1zce^@pf6eb9%3s^_zi5j4v'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['84.201.160.163', 'localhost', 'foodgram-komappp.ddns.net']
+ALLOWED_HOSTS = ['84.201.160.163', 'localhost', 'foodgram-komappp.ddns.net', 'backend']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 

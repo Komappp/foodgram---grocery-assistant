@@ -61,7 +61,7 @@ jobs:
           script: |
             cd infra
             sudo docker-compose stop
-            sudo docker rm komappp/foodgram --force
+            sudo docker pull komappp/foodgram
             sudo rm .env
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env

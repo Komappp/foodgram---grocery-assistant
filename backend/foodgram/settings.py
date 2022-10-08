@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '$m=jgx82k6-=!!bye&3&dsn)q6l1zce^@pf6eb9%3s^_zi5j4v'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['84.201.160.163', 'localhost', 'foodgram-komappp.ddns.net']
 

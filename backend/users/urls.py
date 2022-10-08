@@ -1,13 +1,10 @@
 from django.urls import include, path
-from rest_framework.routers import DefaultRouter
-from users.views import FollowingAPIView, FollowingViewSet
+from users.views import FollowingCreateAPIView, FollowingListAPIView
 
-router = DefaultRouter()
-router.register('subscriptions', FollowingViewSet, basename='follows')
 
 urlpatterns = [
+    path('users/subscriptions/', FollowingListAPIView.as_view()),
     path('', include('djoser.urls')),
-    path('users/', include(router.urls)),
     path('users/<int:follow_id>/subscribe/',
-         FollowingAPIView.as_view()),
+         FollowingCreateAPIView.as_view()),
 ]

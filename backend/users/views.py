@@ -1,20 +1,27 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
 
 from .models import Following
 from .pagination import FollowPagination
 from .serializers import FollowingSerializer, FollowingWriteSerializer
 
 
-class FollowingViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Following.objects.all()
+User = get_user_model()
+
+
+class FollowingListAPIView(generics.ListAPIView):
     serializer_class = FollowingSerializer
     pagination_class = FollowPagination
 
+    def get_queryset(self):
+        user = self.request.user
+        return User.objects.filter(follow__user=user)
 
-class FollowingAPIView(APIView):
+
+class FollowingCreateAPIView(APIView):
 
     def post(self, request, follow_id):
         user = request.user

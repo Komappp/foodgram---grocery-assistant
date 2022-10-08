@@ -14,7 +14,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('', include(router.urls)),
     path('', include('djoser.urls')),
-    path('users/', include('users.urls')),
+    path('users', include('users.urls')),
     path('recipes/<int:recipe_id>/shopping_cart/',
          ShoppingCartFavoriteRecipeAPIView.as_view()),
     path('recipes/<int:recipe_id>/favorite/',

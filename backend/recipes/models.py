@@ -88,7 +88,7 @@ class Recipe(models.Model):
             ingredients[key] = value
         for key, value in ingredients.items():
             ingr, unit = key.split(',')
-            space_count = (string_len - len(ingr + unit + str(i[2]))) * ' '
+            space_count = (string_len - len(ingr + str(i[2]))) * ' '
             shopping_list += f'{ingr} {space_count} {value} {unit}\n'
         print(shopping_list)
         response = HttpResponse(shopping_list, content_type='text/txt')

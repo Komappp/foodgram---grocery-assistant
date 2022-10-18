@@ -21,7 +21,7 @@ Foodgram реализован для публикации рецептов. Ав
 ## Подготовка и запуск проекта
 ### Склонировать репозиторий на локальную машину:
 ```
-git clone https://github.com/NIK-TIGER-BILL/foodgram-project-react
+git clone git@github.com:Komappp/foodgram---grocery-assistant.git
 ```
 ## Для работы с удаленным сервером (на ubuntu):
 * Выполните вход на свой удаленный сервер
@@ -69,7 +69,7 @@ scp nginx.conf <username>@<host>:/home/<username>/nginx.conf
     USER=<username для подключения к серверу>
     HOST=<IP сервера>
     PASSPHRASE=<пароль для сервера, если он установлен>
-    SSH_KEY=<ваш SSH ключ (для получения команда: cat ~/.ssh/id_rsa)>
+    SSH_KEY=<ваш SSH ключ на сервере(для получения команда: cat ~/.ssh/id_rsa)>
 
     TELEGRAM_TO=<ID чата, в который придет сообщение>
     TELEGRAM_TOKEN=<токен вашего бота>
@@ -85,24 +85,8 @@ scp nginx.conf <username>@<host>:/home/<username>/nginx.conf
 sudo docker-compose up -d --build
 ```
 * После успешной сборки на сервере выполните команды (только после первого деплоя):
-    - Соберите статические файлы:
-    ```
-    sudo docker-compose exec backend python manage.py collectstatic --noinput
-    ```
-    - Примените миграции:
-    ```
-    sudo docker-compose exec backend python manage.py migrate --noinput
-    ```
-    - Загрузите ингридиенты  в базу данных (необязательно):  
-    *Если файл не указывать, по умолчанию выберется ingredients.json*
-    ```
-    sudo docker-compose exec backend python manage.py load_ingredients <Название файла из директории data>
-    ```
     - Создать суперпользователя Django:
     ```
     sudo docker-compose exec backend python manage.py createsuperuser
     ```
     - Проект будет доступен по вашему IP
-
-## Проект в интернете
-Проект запущен и доступен по [адресу](http://62.84.118.0/recipes)

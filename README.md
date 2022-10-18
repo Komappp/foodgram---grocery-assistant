@@ -1,5 +1,5 @@
 # Проект Foodgram
-![Actions Status](https://github.com/Komappp/yamdb_final/actions/workflows/badge.svg?event=push)  
+![Actions Status](https://github.com/Komappp/yamdb_final/actions/workflows/foodgram_workflow.yml/badge.svg?event=push)  
   
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/-Django-464646?style=flat-square&logo=Django)](https://www.djangoproject.com/)

@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models import UniqueConstraint
 from django.http import HttpResponse
 from users.models import User
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 
 class Tag(models.Model):
@@ -98,6 +100,11 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@receiver(pre_delete, sender=Recipe)
+def my_handler(sender, instance, **kwargs):
+    instance.image.delete(False)
 
 
 class IngredientRecipe(models.Model):

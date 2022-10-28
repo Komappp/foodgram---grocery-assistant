@@ -72,8 +72,7 @@ class ShoppingCartFavoriteRecipeAPIView(APIView):
     def get_serializer_class(self, request, data):
         if self.is_shopping(request):
             return ShoppingCartSerializer(data=data)
-        else:
-            return FavoriteSerializer(data=data)
+        return FavoriteSerializer(data=data)
 
     def is_shopping(self, request):
         return 'shopping' in request.path

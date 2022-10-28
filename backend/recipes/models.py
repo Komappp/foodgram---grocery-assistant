@@ -1,9 +1,9 @@
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.http import HttpResponse
-from users.models import User
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+from django.http import HttpResponse
+from users.models import User
 
 
 class Tag(models.Model):
